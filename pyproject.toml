@@ -1,0 +1,122 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spt-pipeline"
+version = "2.1.5"
+description = "Manifest-driven single-particle-tracking analysis: tracking, fixed-tau step sizes, diffusion and MSD, expression-marker intensity, and publication-quality condition comparisons."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+    { name = "Andrew Bazley", email = "andrew.bazley@nyulangone.org" },
+]
+maintainers = [
+    { name = "Andrew Bazley", email = "andrew.bazley@nyulangone.org" },
+]
+keywords = [
+    "single-particle-tracking",
+    "single-molecule-tracking",
+    "spt",
+    "smt",
+    "microscopy",
+    "trackpy",
+    "trackmate",
+    "diffusion",
+    "msd",
+    "microrheology",
+    "colocalization",
+    "biophysics",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Image Processing",
+    "Topic :: Scientific/Engineering :: Visualization",
+]
+
+# Everything needed to re-analyse cached tracking output. Deliberately small:
+# the heavy tracking and image-reading stacks are extras, so a collaborator can
+# reproduce figures from CSVs on a laptop without installing trackpy or nd2.
+dependencies = [
+    "numpy>=1.23",
+    "pandas>=1.5",
+    "matplotlib>=3.6",
+    "scipy>=1.10",
+]
+
+[project.optional-dependencies]
+# Detecting and linking particles from raw movies.
+tracking = [
+    "trackpy>=0.6",
+    "numba>=0.57",
+]
+# Reading ND2/TIFF movies and marker images, and extracting acquisition metadata.
+imaging = [
+    "nd2>=0.7",
+    "pims>=0.6",
+    "tifffile>=2023.1.0",
+]
+# GMM subpopulation fitting (analyze compare-conditions --gmm).
+gmm = [
+    "scikit-learn>=1.2",
+]
+# Two-colour bead registration (spt-coloc).
+coloc = [
+    "scikit-image>=0.20",
+]
+# Mixed-effects contrasts in the ergem companion.
+stats = [
+    "statsmodels>=0.14",
+]
+all = [
+    "trackpy>=0.6",
+    "numba>=0.57",
+    "nd2>=0.7",
+    "pims>=0.6",
+    "tifffile>=2023.1.0",
+    "scikit-learn>=1.2",
+    "scikit-image>=0.20",
+    "statsmodels>=0.14",
+]
+dev = [
+    "build>=1.0",
+    "twine>=4.0",
+    "pytest>=7.0",
+]
+
+[project.scripts]
+spt-pipeline = "spt_pipeline.cli:main"
+spt-coloc    = "spt_pipeline.colocalization:main"
+spt-metadata = "spt_pipeline.metadata:main"
+
+[project.urls]
+Homepage      = "https://github.com/andrewbazley/spt-pipeline"
+Documentation = "https://github.com/andrewbazley/spt-pipeline#readme"
+Source        = "https://github.com/andrewbazley/spt-pipeline"
+Issues        = "https://github.com/andrewbazley/spt-pipeline/issues"
+Changelog     = "https://github.com/andrewbazley/spt-pipeline/blob/main/CHANGELOG.md"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+# retired/ lives at the repository root, outside src/, so it is never packaged.
+
+[tool.setuptools.package-data]
+"spt_pipeline.ergem" = ["*.md", "*.txt", "*.sha256"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

@@ -1,0 +1,21 @@
+FICD adaptive ER-track territory analysis
+Version: 3.1.0-adaptive-track-territory
+Build date: 2026-07-22
+
+Verification command:
+python _ficd_cell_intensity.py --version
+
+Expected output:
+3.1.0-adaptive-track-territory
+
+Canonical expression column:
+ficd_bgsub_intensity
+
+Required default behavior:
+- More than five steps per qualifying trajectory
+- At least 100 qualifying trajectories per territory
+- Three-pixel adaptive dilation rings
+- One robust-SD median shift plus >40% incompatible pixels rejects a ring
+- Threefold ordinary area-expansion cap
+- Compact puncta removed before growth and measurement
+- Marker-negative territory intensity set to exactly zero

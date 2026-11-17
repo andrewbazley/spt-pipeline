@@ -1,0 +1,10 @@
+include LICENSE
+include README.md
+include CHANGELOG.md
+include COMPATIBILITY.md
+recursive-include src/spt_pipeline/ergem *.md *.txt *.sha256
+recursive-include tests *.py
+prune retired
+prune dist
+prune examples
+global-exclude *.py[cod] __pycache__/* .DS_Store
