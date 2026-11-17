@@ -663,8 +663,13 @@ def _handle_marker_intensity(a) -> int:
             print(f"  {n_cached} movie(s) already measured; use --force to redo them.")
         work = pd.DataFrame(keep, columns=work.columns) if keep else work.iloc[0:0]
 
+    # pair_markers() derives its marker pool from the frame it is handed, but
+    # movie_rows()/rows_with_tracks() above strip the marker rows out. Add them
+    # back so pairing can find them; marker rows are not trackable, so they are
+    # used only for pairing and never measured.
+    to_measure = pd.concat([work, markers], ignore_index=True)
     results, report = marker.measure_all(
-        work, diameter=diameter, marker_channel=a.marker_channel,
+        to_measure, diameter=diameter, marker_channel=a.marker_channel,
         append=not a.no_append, manifest_path=mpath)
 
     rpath = out_dir / "marker_intensity_report.csv"
